@@ -1,0 +1,5 @@
+# Ignoring the whole build directory.
+/build
+
+# Also ignoring the binary dinrectory.
+/bin
