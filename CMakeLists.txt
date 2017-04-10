@@ -17,3 +17,13 @@ add_executable(
     MyAdBlock
     ${source_files}
 )
+
+# Description de la procédure d'empaquettage.
+install(FILES LICENSE README.md CMakeLists.txt DESTINATION ./)
+
+install(DIRECTORY src/ DESTINATION src/)
+install(DIRECTORY scripts/ DESTINATION scripts/)
+
+set(CPACK_GENERATOR "TGZ")
+
+include(CPack)
