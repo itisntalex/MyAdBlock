@@ -100,6 +100,8 @@ int loadBlockedResources(struct SBlockedResources *res) {
     while ((nread = getline(&line, &len, res->stream)) > 0) {
         if (nread == -1) {
             perror("An error occured while reading the resources' file");
+
+            return -1;
         }
 
         if (line[0] == '!') {
@@ -114,6 +116,8 @@ int loadBlockedResources(struct SBlockedResources *res) {
     }
 
     free(line);
+
+    return 0;
 }
 
 void destroyBlockedResources(struct SBlockedResources *res) {
