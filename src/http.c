@@ -99,7 +99,7 @@ void destroyHttpRequestInfo(struct SHttpRequestInfo *info) {
 }
 
 enum EHttpRequestMethod __identityHttpMethod(const char *message) {
-    for (unsigned char i = 0; i < sizeof(methodePairs); i++) {
+    for (unsigned int i = 0; i < sizeof(methodePairs); i++) {
         if (strstr(message, methodePairs[i].method_s) != NULL) {
             return methodePairs[i].method_e;
         }
