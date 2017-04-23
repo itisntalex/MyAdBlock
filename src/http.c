@@ -19,6 +19,54 @@ static struct __SHttpMethodPair methodePairs[] = {
     {"TRACE", TRACE}
 };
 
+static struct __SHttpStatusCodePair statusCodePairs[] = {
+    {100, Continue},
+    {101, SwitchingProtocols},
+
+    {200, Ok},
+    {201, Created},
+    {202, Accepted},
+    {203, NonAuthoritativeInformation},
+    {204, NoContent},
+    {205, ResetContent},
+    {206, PartialContent},
+
+    {300, MultipleChoices},
+    {301, MovedPermanently},
+    {302, Found},
+    {303, SeeOther},
+    {304, NotModified},
+    {305, UseProxy},
+    {306, Unused},
+    {307, TemporaryRedirect},
+
+    {400, BadRequest},
+    {400, Unauthorized},
+    {400, PaymentRequired},
+    {400, Forbidden},
+    {400, NotFound},
+    {400, MethodNotAllowed},
+    {400, NotAcceptable},
+    {400, ProxyAuthenticationRequired},
+    {400, RequestTimeout},
+    {400, Conflict},
+    {400, Gone},
+    {400, LengthRequired},
+    {400, PreconditionFailed},
+    {400, RequestEntityTooLarge},
+    {400, RequestUrlTooLong},
+    {400, UnsupportedMediaType},
+    {400, RequestRangeNotSatisfiable},
+    {400, ExpectationFailed},
+
+    {500, InternalServerError},
+    {500, NotImplemented},
+    {500, BadGateway},
+    {500, ServiceUnavailable},
+    {500, GatewayTimeout},
+    {500, HTTPVersionNotSupported},
+};
+
 void getHttpRequestInfo(struct SHttpRequestInfo *info, const char *request) {
     char *s, *s2;
     int len;
@@ -58,4 +106,16 @@ enum EHttpRequestMethod __identityHttpMethod(const char *message) {
     }
 
     return NONE;
+}
+
+enum EHttpStatusCode __identityHttpStatusCode(const char *message) {
+    long code = strtol(message, NULL, 10);
+
+    for (unsigned int i = 0; i < sizeof(statusCodePairs); i++) {
+        if (code == statusCodePairs[i].code_i) {
+            return statusCodePairs[i].code_e;
+        }
+    }
+
+    return None;
 }
