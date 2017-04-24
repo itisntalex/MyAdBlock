@@ -76,7 +76,8 @@ void readClientData(struct SProxyServer *server, char **message) {
 
     memset(client_buffer, 0x0, 2 << 20);
 
-    while ((read_size = recv(server->client_sock, client_buffer + total_size, 2 << 20, 0)) > 0) {
+    while ((read_size = recv(server->client_sock, client_buffer + total_size, 2 << 20, 0)) > 0
+           && strstr(client_buffer, "\r\n\r\n") == NULL) {
         total_size += read_size;
     }
 
