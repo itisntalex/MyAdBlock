@@ -67,6 +67,56 @@ static struct __SHttpStatusCodePair statusCodePairs[] = {
     {500, HTTPVersionNotSupported},
 };
 
+static const char* __reverseIdentifyHttpMethod(enum EHttpRequestMethod method) {
+    for (unsigned int i = 0; i < sizeof(methodePairs); i++) {
+        if (method == methodePairs[i].method_e) {
+            return methodePairs[i].method_s;
+        }
+    }
+
+    return "NONE";
+}
+
+void createHttpRequest(struct SHttpRequestInfo *info, char **request) {
+    static const char *http_version = "HTTP/1.0";
+    static const char *crlf = "\r\n";
+    static const char *host = "Host: ";
+
+    int len = 0;
+    const char *method = __reverseIdentifyHttpMethod(info->method);
+
+    len += strlen(method);
+    len += 1; // space character
+
+    len += strlen(info->uri);
+    len += 1; // space character
+
+    len += strlen(http_version);
+    len += strlen(crlf); // carriage return
+
+    len += strlen(host);
+    len += strlen(info->host);
+    len += (2 * strlen(crlf));
+
+    len++; // It's a null-byte terminated string.
+
+    // Now building the request string
+    *request = malloc(len);
+
+    strcpy(*request, method);
+    strcat(*request, " ");
+
+    strcat(*request, info->uri);
+    strcat(*request, " ");
+
+    strcat(*request, http_version);
+    strcat(*request, crlf);
+
+    strcat(*request, host);
+    strcat(*request, info->host);
+    strcat(*request, "\r\n\r\n");
+}
+
 void getHttpRequestInfo(struct SHttpRequestInfo *info, const char *request) {
     char *s, *s2;
     int len;
