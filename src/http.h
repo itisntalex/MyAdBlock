@@ -89,6 +89,8 @@ void createHttpRequest(struct SHttpRequestInfo *info, char **request);
 void getHttpRequestInfo(struct SHttpRequestInfo *info, const char *request);
 void destroyHttpRequestInfo(struct SHttpRequestInfo *info);
 
+const char* buildHttpResponse(struct SHttpResponseInfo *info);
+
 struct __SHttpMethodPair {
     char *method_s;
     enum EHttpRequestMethod method_e;

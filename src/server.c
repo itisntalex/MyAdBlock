@@ -70,6 +70,10 @@ void acceptConnection(struct SProxyServer *server) {
     }
 }
 
+void disconnectClient(struct SProxyServer *server) {
+    close(server->client_sock);
+}
+
 void readClientData(struct SProxyServer *server, char **message) {
     short read_size, total_size = 0;
     int len;
@@ -91,4 +95,10 @@ void readClientData(struct SProxyServer *server, char **message) {
     *message = malloc(len + 1);
 
     memcpy(*message, client_buffer, len + 1);
+}
+
+void sendClientData(struct SProxyServer *server, const char *message) {
+    send(server->client_sock, message, strlen(message), 0);
+
+    close(server->client_sock);
 }

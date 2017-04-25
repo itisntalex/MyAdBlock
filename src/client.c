@@ -58,6 +58,8 @@ void connectClient(struct SProxyClient *client, const char *addr) {
 
 void closeClient(struct SProxyClient *client) {
     close(client->sock);
+
+    client->sock = -1;
 }
 
 void sendServerData(struct SProxyClient *client, const char *message, char **reply) {
