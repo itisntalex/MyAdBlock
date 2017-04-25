@@ -20,9 +20,11 @@ add_executable(
 
 # Description de la procédure d'empaquettage.
 install(FILES LICENSE README.md CMakeLists.txt DESTINATION ./)
+install(FILES assets/blocked.txt DESTINATION ./bin/assets/)
 
+install(DIRECTORY docs/ DESTINATION doc/)
 install(DIRECTORY src/ DESTINATION src/)
-install(DIRECTORY scripts/ DESTINATION scripts/)
+install(DIRECTORY wireshark/ DESTINATION wireshark/)
 
 set(CPACK_GENERATOR "TGZ")
 
