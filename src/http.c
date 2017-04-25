@@ -4,6 +4,7 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #
 #include "http.h"
@@ -77,6 +78,16 @@ static const char* __reverseIdentifyHttpMethod(enum EHttpRequestMethod method) {
     return "NONE";
 }
 
+static unsigned int __reverseIdentifyStatusCode(enum EHttpStatusCode code) {
+    for (unsigned int i = 0; i < sizeof(statusCodePairs); i++) {
+        if (code == statusCodePairs[i].code_e) {
+            return statusCodePairs[i].code_i;
+        }
+    }
+
+    return 0;
+}
+
 void createHttpRequest(struct SHttpRequestInfo *info, char **request) {
     static const char *http_version = "HTTP/1.0";
     static const char *crlf = "\r\n";
@@ -146,6 +157,37 @@ void getHttpRequestInfo(struct SHttpRequestInfo *info, const char *request) {
 void destroyHttpRequestInfo(struct SHttpRequestInfo *info) {
     free(info->uri);
     free(info->host);
+}
+
+void buildHttpResponse(struct SHttpResponseInfo *info, char **response) {
+    static const char *http_version = "HTTP/1.0";
+    static const char *connection_closed = "Connection: Closed";
+    static const char *crlf = "\r\n";
+
+    int len = 0;
+
+    // Status line
+    len += strlen(http_version);
+    len ++;
+    len += 3; // Status code
+    len += strlen(info->reasonPhrase);
+    len += strlen(crlf);
+
+    // Connection header field
+    len += strlen(connection_closed);
+    len += 2 * strlen(crlf);
+
+    // It's null-byte terminated string.
+    len++;
+
+    // Now building the response string
+    *response = malloc(len);
+
+    sprintf(*response, "%s %d %s\r\n%s\r\n\r\n",
+            http_version,   // HTTP version
+            __reverseIdentifyStatusCode(info->statusCode),
+            info->reasonPhrase, // Reason phrase,
+            connection_closed);
 }
 
 enum EHttpRequestMethod __identityHttpMethod(const char *message) {

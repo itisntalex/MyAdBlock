@@ -16,9 +16,12 @@
 
 static struct SProxyServer server;
 static struct SProxyClient client;
+static char *ad_response;
 struct SBlockedResources blockedRes;
 
 static void __appInit(unsigned short server_port) {
+    struct SHttpResponseInfo ad_response_info;
+
     initBlockedResources(&blockedRes, "assets/blocked.txt");
     loadBlockedResources(&blockedRes);
 
@@ -29,6 +32,12 @@ static void __appInit(unsigned short server_port) {
 
     // Initializing the client...
     initClient(&client);
+
+    // Building a dummy response for ad...
+    ad_response_info.statusCode = Forbidden;
+    ad_response_info.reasonPhrase = "Ad not allowed by proxy";
+
+    buildHttpResponse(&ad_response_info, &ad_response);
 }
 
 static void __appClose() {
@@ -39,6 +48,8 @@ static void __appClose() {
     closeClient(&client);
 
     destroyBlockedResources(&blockedRes);
+
+    free(ad_response);
 }
 
 static void __appProc() {
@@ -73,6 +84,9 @@ static void __appProc() {
     printf("Blocked resources lookup... ");
     if (isBlocked(&blockedRes, request_info.uri) == 1) {
         printf("This resource has been black listed... Aborting request.\n\n");
+
+        sendClientData(&server, ad_response);
+
         closeClient(&client);
         return;
     }

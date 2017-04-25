@@ -20,7 +20,7 @@ enum EHttpRequestMethod {
 
 enum EHttpStatusCode {
     None,
-    
+
     // 1xx: Information
     Continue,
     SwitchingProtocols,
@@ -89,7 +89,7 @@ void createHttpRequest(struct SHttpRequestInfo *info, char **request);
 void getHttpRequestInfo(struct SHttpRequestInfo *info, const char *request);
 void destroyHttpRequestInfo(struct SHttpRequestInfo *info);
 
-const char* buildHttpResponse(struct SHttpResponseInfo *info);
+void buildHttpResponse(struct SHttpResponseInfo *info, char **response);
 
 struct __SHttpMethodPair {
     char *method_s;
